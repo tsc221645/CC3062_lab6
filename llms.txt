@@ -1,0 +1,23 @@
+API LaLigaTracker
+
+Descripción:
+Esta API permite realizar la gestión de los partidos de fúbol y sus estadísticas respectivas.
+
+Endpoints REST:
+- GET /api/matches - Lista todos los partidos.
+- GET /api/matches/<id> - Obtiene un partido específico.
+- POST /api/matches - Crea un nuevo partido.
+- PUT /api/matches/<id> - Actualiza un partido existente. 
+- DELETE /api/matches/<id> - Elimina un partido.
+
+
+Endpoints PATCH:
+Permiten actualizar de manera parcial un recurso existente, en lugar de remplazarlo por completo con PUT.
+- PATCH /api/matches/<id>/goals → Suma un gol al partido.
+- PATCH /api/matches/<id>/yellowcards → Suma una tarjeta amarilla.
+- PATCH /api/matches/<id>/redcards → Suma una tarjeta roja.
+- PATCH /api/matches/<id>/extratime → Marca el partido como con tiempo extra.
+
+Respuestas:
+Se encuentran en formato JSON.
+
