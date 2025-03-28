@@ -9,7 +9,7 @@
 ![image](https://github.com/user-attachments/assets/716f738a-24e6-4137-bc61-efb0d2a9b2e2)
 
 ### Uso 
-Para poder comprender de mejor manera la API, se puede consultar el archivo llms.txt en donde se explica el uso de los endpoints implementados.
+Para poder comprender de mejor manera la API, se puede consultar el archivo [llms.txt](/llms.txt) en donde se explica el uso de los endpoints implementados.
 
 
 ### Colección de Postman 
