@@ -39,6 +39,13 @@ func main() {
 	router.HandleFunc("/api/matches", createMatch).Methods("POST")
 	router.HandleFunc("/api/matches/{id}", updateMatch).Methods("PUT")
 	router.HandleFunc("/api/matches/{id}", deleteMatch).Methods("DELETE")
+
+	// PATCH
+	router.HandleFunc("/api/matches/{id}/goals", patchGoals).Methods("PATCH")
+	router.HandleFunc("/api/matches/{id}/yellowcards", patchYellowCards).Methods("PATCH")
+	router.HandleFunc("/api/matches/{id}/redcards", patchRedCards).Methods("PATCH")
+	router.HandleFunc("/api/matches/{id}/extratime", patchExtraTime).Methods("PATCH")
+
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./public"))))
 
 	log.Println("Servidor escuchando en http://localhost:8080") //localhost:8080
@@ -51,6 +58,7 @@ func middlewareCORS(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+
 		if r.Method == "OPTIONS" {
 			return
 		}
@@ -60,13 +68,17 @@ func middlewareCORS(next http.Handler) http.Handler {
 
 // createTable - creates the table if it does not exist
 func createTable() {
-	// create table
+	// create table with additional columns for goals, yellow cards, red cards and extra time
 	query := `
 	CREATE TABLE IF NOT EXISTS matches (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		home_team TEXT NOT NULL,
 		away_team TEXT NOT NULL,
-		match_date TEXT NOT NULL
+		match_date TEXT NOT NULL,
+		goals INTEGER DEFAULT 0,
+		yellow_cards INTEGER DEFAULT 0,
+		red_cards INTEGER DEFAULT 0,
+		extra_time TEXT DEFAULT ''
 	);`
 	_, err := db.Exec(query)
 	if err != nil {
@@ -171,5 +183,50 @@ func deleteMatch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// PATCH endpoints
+// patchGoals - increments the goals of a match (PATCH)
+func patchGoals(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	_, err := db.Exec("UPDATE matches SET goals = goals + 1 WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// patchYellowCards - increments the yellow cards of a match (PATCH)
+func patchYellowCards(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	_, err := db.Exec("UPDATE matches SET yellow_cards = yellow_cards + 1 WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// patchRedCards - increments the red cards of a match (PATCH)
+func patchRedCards(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	_, err := db.Exec("UPDATE matches SET red_cards = red_cards + 1 WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// patchExtraTime - adds extra time to a match (PATCH)
+func patchExtraTime(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	_, err := db.Exec("UPDATE matches SET extra_time = 'Sí' WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
 	w.WriteHeader(http.StatusNoContent)
 }
