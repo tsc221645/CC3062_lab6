@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: API LaLigaTracker
+  version: 1.0.0
+  description: Esta API permite realizar la gestión de los partidos de fúbol y sus estadísticas respectivas.
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /api/matches:
+    get:
+      summary: Obtener todos los partidos
+      responses:
+        '200':
+          description: Lista de partidos
+    post:
+      summary: Crear un nuevo partido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Match'
+      responses:
+        '201':
+          description: Partido creado
+
+  /api/matches/{id}:
+    get:
+      summary: Obtener un partido por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Partido encontrado
+    put:
+      summary: Actualizar un partido
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Match'
+      responses:
+        '204':
+          description: Partido actualizado
+    delete:
+      summary: Eliminar un partido
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Partido eliminado
+
+  /api/matches/{id}/goals:
+    patch:
+      summary: Registrar un gol
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Gol registrado
+
+  /api/matches/{id}/yellowcards:
+    patch:
+      summary: Registrar tarjeta amarilla
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Tarjeta amarilla registrada
+
+  /api/matches/{id}/redcards:
+    patch:
+      summary: Registrar tarjeta roja
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Tarjeta roja registrada
+
+  /api/matches/{id}/extratime:
+    patch:
+      summary: Registrar tiempo extra
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Tiempo extra registrado
+
+components:
+  schemas:
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+        homeTeam:
+          type: string
+        awayTeam:
+          type: string
+        matchDate:
+          type: string
+          format: date
+        goals:
+          type: integer
+        yellow_cards:
+          type: integer
+        red_cards:
+          type: integer
+        extra_time:
+          type: string
